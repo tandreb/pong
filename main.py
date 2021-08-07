@@ -1,54 +1,55 @@
 import pygame
+import random
 
-GAME_WIDTH = 800
-GAME_HEIGHT = 600
-PLAYER_WIDTH = 10
-PLAYER_HEIGHT = 60
+WIDTH = 360
+HEIGHT = 480
+FPS = 30
 
-class Ball(pygame.sprite.Sprite):
-    pass
+# Define Colors
+WHITE = (255, 255, 255)
+BLACK = (0, 0, 0)
+RED = (255, 0, 0)
+GREEN = (0, 255, 0)
+BLUE = (0, 0, 255)
 
-class Player(pygame.sprite.Sprite):
-    def __init__(self):
-        self.surface = pygame.Surface((PLAYER_WIDTH, PLAYER_HEIGHT))
-        self.rect = self.surface.get_rect(topleft=(40, 40))
-        self.surface.fill((255,255,255))
+## initialize pygame and create window
+pygame.init()
+# pygame.mixer.init()  ## For sound
+screen = pygame.display.set_mode((WIDTH, HEIGHT))
+pygame.display.set_caption("Pong")
+clock = pygame.time.Clock()  ## For syncing the FPS
 
-    def draw(self, surface_to_draw_on):
-        surface_to_draw_on.blit(self.surface, self.rect)
+## group all the sprites together for ease of update
+all_sprites = pygame.sprite.Group()
 
+## Game loop
+running = True
+while running:
 
-    def move(self):
-        key = pygame.key.get_pressed()
-        if key[pygame.K_UP]:
-            self.rect.y -= 1
-        if key[pygame.K_DOWN]:
-            self.rect.y += 1
+    # 1 Process input/events
+    clock.tick(FPS)  ## will make the loop run at the same speed all the time
+    for event in pygame.event.get():  # gets all the events which have occured till now and keeps tab of them.
+        ## listening for the the X button at the top
+        if event.type == pygame.QUIT:
+            running = False
+        if event.type == pygame.KEYDOWN:
+            if event.key == pygame.K_ESCAPE:
+                running = False
 
-    def update(self, surface_to_draw_on):
-        self.move()
-        self.draw(surface_to_draw_on)
+    # 2 Update
+    all_sprites.update()
 
-def main_loop():
-    pygame.init()
-    clock = pygame.time.Clock()
-    surface = pygame.display.set_mode((GAME_WIDTH, GAME_HEIGHT))
-    is_running = True
-    player = Player()
-    while is_running:
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                # Close the program any way you want, or troll users who want to close your program.
-                raise SystemExit
-            elif event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_ESCAPE:
-                    raise SystemExit
+    # 3 Draw/render
+    screen.fill(BLACK)
 
-        surface.fill((0,0,0))
-        player.update(surface)
-        pygame.display.flip()
-        clock.tick(60)
+    all_sprites.draw(screen)
+    ########################
 
+    ### Your code comes here
 
-if __name__ == '__main__':
-    main_loop()
+    ########################
+
+    ## Done after drawing everything to the screen
+    pygame.display.flip()
+
+pygame.quit()
