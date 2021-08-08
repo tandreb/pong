@@ -2,11 +2,12 @@ import pygame
 import random
 
 from ball import Ball
+from opponent import Opponent
 from player import Player
 
 WIDTH = 800
 HEIGHT = 600
-FPS = 100
+FPS = 60
 
 pygame.init()
 # pygame.mixer.init()  ## For sound
@@ -16,9 +17,10 @@ clock = pygame.time.Clock()  # For syncing the FPS
 
 player = Player(WIDTH, HEIGHT)
 ball = Ball(WIDTH, HEIGHT)
+opponent = Opponent(WIDTH, HEIGHT)
 # group all the sprites together for ease of update
 all_sprites = pygame.sprite.Group()
-all_sprites.add(player, ball)
+all_sprites.add(player, opponent, ball)
 
 ball.rect.center = (WIDTH // 2, HEIGHT // 2)
 
@@ -50,6 +52,10 @@ while running:
     if pygame.sprite.collide_rect(player, ball):
         ball.collided_with_player(player)
 
+    if pygame.sprite.collide_rect(opponent, ball):
+        ball.collided_with_player(opponent)
+
+    opponent.follow_ball(ball)
     ########################
 
     # Done after drawing everything to the screen

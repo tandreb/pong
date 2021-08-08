@@ -1,7 +1,7 @@
 import pygame.sprite
 
 RADIUS = 10
-BALL_SPEED = 4
+BALL_SPEED = 8
 
 
 class Ball(pygame.sprite.Sprite):
@@ -24,7 +24,7 @@ class Ball(pygame.sprite.Sprite):
         if self.rect.centery >= self.screen_height or self.rect.centery <= 0:
             self.speed_y *= -1
         if self.rect.centerx >= self.screen_width or self.rect.centerx <= 0:
-            self.speed_x *= -1
+            self.reset_ball()
 
         self.rect.centerx += self.speed_x
         self.rect.centery += self.speed_y
@@ -38,3 +38,7 @@ class Ball(pygame.sprite.Sprite):
             self.speed_y *= -1
         if abs(self.rect.bottom - player.rect.top) <= 5 and self.speed_y > 0:
             self.speed_y *= -1
+
+
+    def reset_ball(self):
+        self.rect.centerx = self.screen_width // 2
